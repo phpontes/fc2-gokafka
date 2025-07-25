@@ -10,9 +10,9 @@ import (
 func main() {
 	deliveryChan := make(chan kafka.Event)
 	producer := NewKafkaProducer()
-	Publish("XABLAU!!", "teste", producer, nil, deliveryChan)
+	Publish("transferido", "teste", producer, []byte("transferencia"), deliveryChan)
 	go DeliveryReport(deliveryChan)
-	producer.Flush(1000)
+	producer.Flush(5000)
 	/*e := <-deliveryChan
 	msg := e.(*kafka.Message)
 	if msg.TopicPartition.Error != nil {
@@ -25,7 +25,7 @@ func main() {
 func NewKafkaProducer() *kafka.Producer {
 	configMap := &kafka.ConfigMap{
 		"bootstrap.servers":   "fc2-gokafka-kafka-1:9092",
-		"delivery.timeout.ms": "0",
+		"delivery.timeout.ms": "2000",
 		"acks":                "all",
 		"enable.idempotence":  "true",
 	}
